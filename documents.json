@@ -1,11 +1,37 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
+    "name": "compliance-file",
+    "title": "Product compliance file",
+    "for_each": "select id, code || ' ' || name as name from products where active",
     "file": "name",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      { "title": "Product", "layout": "record", "sql": "select code, name, array_to_string(markets, ', ') as markets, owner, coalesce(scip_ref, 'none') as scip_notification from products where id = $1" },
+      { "title": "Status by rule", "sql": "select regulation, status, parts, unknown_parts, failing_parts, listed_parts, exemption_parts from v_product_rule where product_id = $1 order by regulation" },
+      { "title": "Every part and its declaration", "sql": "select pr.part_no, pr.description, pr.supplier, pr.regulation, pr.state, pr.exemption, pr.received_on, pr.document_ref from v_part_rule pr join bom b on b.part_id = pr.part_id where b.product_id = $1 order by pr.part_no, pr.regulation" },
+      { "title": "Listed substances", "sql": "select p.part_no, d.regulation, s.name as substance, s.cas, x.concentration_ppm, x.location from v_part_rule pr join declarations d on d.id = pr.declaration_id join declaration_substances x on x.declaration_id = d.id join substances s on s.id = x.substance_id join parts p on p.id = pr.part_id join bom b on b.part_id = p.id where b.product_id = $1 order by p.part_no" },
+      { "title": "Certificates issued", "sql": "select regulation, issued_to, issued_on, status_at_issue from certificates where product_id = $1 order by issued_on desc" }
+    ]
+  },
+  {
+    "name": "article-33",
+    "title": "REACH Article 33 information",
+    "for_each": "select distinct p.id, p.code || ' ' || p.name as name from products p join v_svhc v on v.product = p.code",
+    "file": "name",
+    "sections": [
+      { "title": "Article", "layout": "record", "sql": "select code as product, name, array_to_string(markets, ', ') as markets, coalesce(scip_ref, 'not yet notified') as scip_notification from products where id = $1" },
+      { "title": "Candidate List substances above 0.1% weight by weight", "note": "Supplied under Article 33 of Regulation (EC) No 1907/2006. Concentration is in the part named, which is the article the substance sits in.", "sql": "select v.part_no, v.substance, v.cas, v.concentration_ppm, v.location from v_svhc v join products p on p.code = v.product where p.id = $1 order by v.part_no" },
+      { "title": "Safe use", "sql": "select 'The substances listed are bound into the part. No release is expected in normal use. Dispose of the product as electrical waste.' as information where $1::uuid is not null" }
+    ]
+  },
+  {
+    "name": "supplier-request",
+    "title": "Declarations requested",
+    "for_each": "select distinct s.id, s.code || ' ' || s.name as name from suppliers s join v_part_rule pr on pr.supplier_id = s.id where pr.state in ('missing','expired','stale')",
+    "file": "name",
+    "sections": [
+      { "title": "Supplier", "layout": "record", "sql": "select code, name, contact_name, contact_email, country from suppliers where id = $1" },
+      { "title": "Parts we need a current declaration for", "sql": "select pr.part_no, p.mfr_part_no, pr.description, pr.regulation, pr.state, pr.received_on as last_declared from v_part_rule pr join parts p on p.id = pr.part_id where pr.supplier_id = $1 and pr.state in ('missing','expired','stale') order by pr.part_no, pr.regulation" },
+      { "title": "The rules we are asking about", "sql": "select distinct r.code, r.name, r.source from regulations r join v_part_rule pr on pr.regulation = r.code where pr.supplier_id = $1 and pr.state in ('missing','expired','stale') order by r.code" }
     ]
   }
 ]

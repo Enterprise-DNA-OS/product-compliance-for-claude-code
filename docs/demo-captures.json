@@ -1,0 +1,24 @@
+{
+  "captured": "2026-11-14T12:21:00.546Z",
+  "data": "Fictional seeded demo",
+  "screens": [
+    {
+      "title": "Can we certify each product?",
+      "ask": "Which of our products can we certify today, under each rule that applies where we sell them?",
+      "command": "npm run comply -- status",
+      "output": "  product  regulation         status               parts  unknown_parts  failing_parts  listed_parts  exemption_parts\n  -------  -----------------  -------------------  -----  -------------  -------------  ------------  ---------------\n  BL-40    CONFLICT-MINERALS  unknown              2      1              0              0             0\n  BL-40    EU-ROHS            unknown              6      1              0              0             1\n  BL-40    REACH-SVHC         unknown              6      1              0              1             0\n  CTRL-1   CONFLICT-MINERALS  non_compliant        2      0              2              0             0\n  CTRL-1   EU-ROHS            compliant_exemption  4      0              0              0             2\n  CTRL-1   PROP65             contains_listed      4      0              0              1             0\n  CTRL-1   REACH-SVHC         contains_listed      4      0              0              1             0\n  FL-200   CONFLICT-MINERALS  unknown              3      2              0              0             0\n  FL-200   EU-ROHS            non_compliant        7      1              1              0             0\n  FL-200   PROP65             unknown              7      1              0              1             0\n  FL-200   REACH-SVHC         unknown              7      2              0              0             0"
+    },
+    {
+      "title": "Who owes us a declaration",
+      "ask": "Which parts are we missing a current declaration for, and from which supplier?",
+      "command": "npm run comply -- gaps",
+      "output": "  part_no  description                   supplier  regulation  state    received_on  valid_until\n  -------  ----------------------------  --------  ----------  -------  -----------  -----------\n  P-2002   Constant current driver 40 W  DRVR      EU-ROHS     expired  2024-11-04   2026-11-04\n  P-7001   Surge protector 10 kV         DRVR      EU-ROHS     missing\n  P-7001   Surge protector 10 kV         DRVR      PROP65      missing\n  P-7001   Surge protector 10 kV         DRVR      REACH-SVHC  missing\n  P-1001   LED module 200 W              LUMA      REACH-SVHC  stale    2026-01-18\n  P-1002   LED module 40 W               LUMA      REACH-SVHC  stale    2026-01-18"
+    },
+    {
+      "title": "Listed substances and SCIP",
+      "ask": "Which products contain a Candidate List substance above 0.1%, and have we notified SCIP?",
+      "command": "npm run comply -- svhc",
+      "output": "  product  part_no  substance  cas        concentration_ppm  location    markets         scip\n  -------  -------  ---------  ---------  -----------------  ----------  --------------  ------------------\n  BL-40    P-6001   Lead       7439-92-1  25000.0            brass body  EU AU NZ        NOT NOTIFIED\n  CTRL-1   P-6001   Lead       7439-92-1  25000.0            brass body  EU US US-CA AU  7e1c5a2b-demo-scip"
+    }
+  ]
+}

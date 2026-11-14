@@ -1,0 +1,10 @@
+{
+  "part": "Item Number",
+  "description": "Item Name",
+  "supplier": "Vendor Name",
+  "rohs": "EU RoHS Result",
+  "reach": "REACH Result",
+  "svhc": "Declared SVHCs",
+  "date": "Response Received",
+  "document": "Evidence File"
+}

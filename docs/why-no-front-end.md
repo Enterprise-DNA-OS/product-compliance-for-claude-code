@@ -1,24 +1,24 @@
 # Why there is no front end
 
-Assent is a database with a subscription. The tables underneath it are ordinary: a few entities, a few relationships, a handful of workflows you repeat every week. What you pay for is the layer on top that lets people who do not write SQL get at those tables. Screens, filters, dashboards, forms.
+Assent is a database of your parts, your suppliers and what each supplier has said, with a portal and dashboards on top. The records underneath are ordinary: parts, suppliers, products, declarations, a few lists of restricted substances. The questions are ordinary too: can we certify this product, who has not answered, what changes now that ECHA has added a substance.
 
-That layer used to be the whole product, because talking to a database was hard. It is not hard any more. Open this folder in Claude Code, describe what you want, and it writes the query, runs it, and explains the answer. Ask a question the dashboard never had a chart for and you still get an answer.
+That layer used to be the whole product, because getting at the records took a specialist. It does not any more. Open this folder in Claude Code, ask, and it runs the query and explains the answer, including the questions the dashboard never had a chart for.
 
 ## What you gain
 
-- **Better answers.** A dashboard shows what the vendor decided to chart. Here you ask your own question, in your own words, and get it answered against your own data.
-- **No seats.** Everyone who needs to look can look. The bill does not grow with headcount.
-- **Your data in your Postgres.** Plain tables. Back them up, query them from anything, leave any time. There is no export step because there is nothing to leave.
-- **A process that matches you.** When your way of working changes, you add a command. You do not wait for a feature request to clear.
+- **Answers per product, not per part.** A customer asks about a product. The roll-up from parts to product is a view, and the certificate is refused when the records do not support it.
+- **No seats and no per-supplier fees.** Everyone who needs to look can look.
+- **Your records in your Postgres.** Plain tables. Back them up, query them from anything, leave any time.
+- **Rules you can read.** Every rule and its source is in `docs/compliance.md`, and every limit is a row you can see.
 
 ## What you give up
 
-- **A visual board.** Stages are a table you ask about, not cards you drag.
-- **A phone app.** It runs where Claude Code runs.
-- **A vendor help desk.** This is open source. Enterprise DNA supports the installed version for businesses that want someone to call.
+- **A supplier portal.** Suppliers answer by email; a person records the answer. `/draft-requests` writes the chasers.
+- **A regulatory content team.** You update the rules and substance lists when they change. `/customise` does the database side.
+- **A phone app and drag-and-drop screens.** It runs where Claude Code runs.
 
 ## Who this fits
 
-Small teams who already use Claude Code, or who would rather learn to ask than learn another interface. If your team needs a screen to look at all day, keep Assent. If you need the answers more than the screens, this is cheaper, faster and yours.
+Manufacturers and importers who answer RoHS, REACH, Proposition 65 and conflict minerals questions from customers, and who run it today from spreadsheets or pay for more platform than they use. If you need thousands of suppliers answering through a portal, keep a portal. If you need the answers, this is yours.
 
 Installed and run for you: https://enterprisedna.co/omni/instead-of/assent

@@ -1,14 +1,33 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Product Compliance for Claude Code: what needs attention, rendered by npm run view",
+    "title": "This week in product compliance",
+    "subtitle": "What needs a person, which products are not clear, and who owes us an answer",
     "sections": [
-      {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
-      }
+      { "title": "Needs attention", "sql": "select issue, ref, rule, detail from v_attention order by issue, ref, rule" },
+      { "title": "Products not clear to certify", "sql": "select product, regulation, status, unknown_parts, failing_parts from v_product_rule where status not in ('compliant','compliant_exemption') order by product, regulation" },
+      { "title": "Supplier requests open", "sql": "select supplier, regulation, array_to_string(part_nos, ' ') as parts, sent_on, due_on, reminders, status from v_open_supplier_requests order by due_on" },
+      { "title": "Customer requests open", "sql": "select c.customer, p.code as product, c.regulation, c.due_on from customer_requests c join products p on p.id = c.product_id where c.status = 'open' order by c.due_on" }
+    ]
+  },
+  {
+    "name": "status",
+    "title": "Product status by rule",
+    "subtitle": "Every product against every rule that applies in its markets",
+    "sections": [
+      { "title": "Products", "sql": "select product, regulation, status, parts, unknown_parts, failing_parts, listed_parts, exemption_parts from v_product_rule order by product, regulation" },
+      { "title": "Candidate List substances above 0.1%", "sql": "select product, part_no, substance, cas, concentration_ppm, coalesce(scip_ref, 'not notified') as scip from v_svhc order by product, part_no" },
+      { "title": "Exemptions relied on", "sql": "select part_no, supplier, exemption, exemption_expires, days_left, used_in from v_exemptions order by exemption_expires nulls last" }
+    ]
+  },
+  {
+    "name": "suppliers",
+    "title": "Suppliers",
+    "subtitle": "Who has answered, who has not, and conflict minerals templates",
+    "sections": [
+      { "title": "Declarations missing, expired or stale", "sql": "select supplier, part_no, regulation, state, received_on from v_part_rule where state in ('missing','expired','stale') order by supplier, part_no, regulation" },
+      { "title": "Conflict minerals templates", "sql": "select supplier, received_on, valid_until, smelters_reported, smelters_not_conformant, state from v_supplier_cmrt order by state, supplier" },
+      { "title": "Declarations by supplier", "sql": "select coalesce(supplier,'(no supplier)') as supplier, count(*) filter (where state in ('compliant','compliant_exemption','contains_listed'))::int as current, count(*) filter (where state in ('missing','expired','stale'))::int as owed, count(*) filter (where state = 'non_compliant')::int as failing from v_part_rule group by 1 order by owed desc, 1" }
     ]
   }
 ]

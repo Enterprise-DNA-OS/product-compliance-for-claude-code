@@ -1,0 +1,12 @@
+[
+  { "question": "Which of our products can we certify for RoHS today, and which parts stop the rest?", "command": "npm run comply -- status" },
+  { "question": "Which parts went stale when ECHA last updated the Candidate List, and which suppliers do we chase?", "command": "npm run comply -- gaps" },
+  { "question": "Which products contain a Candidate List substance above 0.1%, and do we have a SCIP number for each?", "command": "npm run comply -- svhc" },
+  { "question": "Which RoHS exemptions expire in the next six months, and which products use those parts?", "command": "npm run comply -- exemptions" },
+  { "question": "If the rules on lead tighten, which products and parts are affected?", "command": "npm run comply -- where-used --substance=lead" },
+  { "question": "If one supplier stops answering, which of our products does it touch?", "command": "npm run comply -- where-used --supplier=DRVR" },
+  { "question": "Which suppliers carry tin, tantalum, tungsten or gold and have no current conflict minerals template?", "command": "npm run comply -- conflict-minerals" },
+  { "question": "Which customer requests are due this week, and can we answer each one today?", "command": "npm run comply -- weekly-review" },
+  { "question": "Which supplier requests are overdue, and how many times have we chased each one?", "command": "npm run comply -- requests" },
+  { "question": "Which declarations have no document behind them?", "command": "npm run comply -- compliance" }
+]
